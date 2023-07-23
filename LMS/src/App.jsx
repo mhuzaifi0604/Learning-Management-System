@@ -19,14 +19,14 @@ function App() {
       <div>
         <Router>
           <Routes>
-            <Route path='/' element={<Home/>}/>
-            <Route path='/Admin_Dashboard' element={<Admin/>}/>
-            <Route path='/Admin_Dashboard/:newpage' element={<Admin_pager/>}/>
-            <Route path='/User_Dashboard' element={<User/>}/>
-            <Route path='/User_Dashboard/:new_page' element={<User_pager/>}/>
+            <Route path='/' element={<Home />} />
+            <Route path='/Admin_Dashboard' element={<Admin />} />
+            <Route path='/Admin_Dashboard/:newpage' element={<Admin_pager />} />
+            <Route path='/User_Dashboard' element={<User />} />
+            <Route path='/User_Dashboard/:new_page' element={<User_pager />} />
           </Routes>
         </Router>
-        </div>
+      </div>
     </>
   )
 }

@@ -17,28 +17,28 @@ function Login() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-          const auth = getAuth();
-          await signInWithEmailAndPassword(auth, email, password);
-          const user = auth.currentUser;
-          const uid = user.uid;
-          console.log('User authenticated with ID:', uid);
-          localStorage.setItem('name', email.slice(0, email.indexOf('@')));
-          setname(email.slice(0, email.indexOf('@')));
-          if (email.slice(email.indexOf('@'), email.length) === '@lms.com') {
-           navigate('/Admin_Dashboard')
-          } else {
-            navigate('/User_Dashboard')
-          }
+            const auth = getAuth();
+            await signInWithEmailAndPassword(auth, email, password);
+            const user = auth.currentUser;
+            const uid = user.uid;
+            console.log('User authenticated with ID:', uid);
+            localStorage.setItem('name', email.slice(0, email.indexOf('@')));
+            setname(email.slice(0, email.indexOf('@')));
+            if (email.slice(email.indexOf('@'), email.length) === '@lms.com') {
+                navigate('/Admin_Dashboard')
+            } else {
+                navigate('/User_Dashboard')
+            }
         } catch (error) {
-          setIsLoggedIn(false);
-          setError('Invalid Email or Password');
-          setEmail('');
-          setPassword('');
+            setIsLoggedIn(false);
+            setError('Invalid Email or Password');
+            setEmail('');
+            setPassword('');
         }
         // console.log('email:', email);
         // console.log('password:', password);
         // console.log('whose email: ', email.slice(email.indexOf('@'), email.length));
-      };
+    };
     return (
         <>
             <form onSubmit={handleSubmit} className="m-5 mt-0 p-6 w-4/5 border-2 border-blue-900 bg-[#170c27] backdrop-filter backdrop-blur-md shadow-lg shadow-teal-100 rounded-md">

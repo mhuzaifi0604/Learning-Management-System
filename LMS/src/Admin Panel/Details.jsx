@@ -130,18 +130,24 @@ function Details() {
                                 </td>
                                 <td>
                                     <button
-                                    onClick={handletasks}
-                                    className='h-10 w-10 rounded-full text-center text-3xl font-extrabold font-serif flex justify-center items-center bg-green-500 text-white'
+                                        onClick={handletasks}
+                                        className='h-10 w-10 rounded-full text-center text-3xl font-extrabold font-serif flex justify-center items-center bg-green-500 text-white'
                                     >
                                         +
                                     </button>
                                 </td>
 
                             </tr>
+                            <tr className='flex w-full'>
+                                <th className="border-2 w-1/6">Sr #</th>
+                                <th className="border-2 w-4/6">Task</th>
+                                <th className="border-2 w-1/6">Priority</th>
+                            </tr>
                             {messageData.tasks.map((task, index) => (
                                 <tr key={index} className='flex w-full'>
                                     <td className="border text-center w-1/6 text-lg font-serif font-bold italic"># {index + 1}</td>
-                                    <td className="border text-center w-5/6">{task}</td>
+                                    <td className="border text-center w-4/6 italic font-serif">{task.task}</td>
+                                    <td className="border text-center w-1/6 italic font-serif font-bold">{task.priority}</td>
                                 </tr>
                             ))}
                         </tbody>
