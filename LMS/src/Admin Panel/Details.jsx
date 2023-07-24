@@ -73,18 +73,19 @@ function Details() {
 
     return (
         <>
-            <h1 className='text-center'>Change User Details</h1>
+            <div className='flex flex-col h-screen w-screen justify-center items-center bg-[#3e5e51]'>
+                <h1 className='font-bold mb-4 text-white font-serif text-3xl'>Change User Details</h1>
             {loading ? (
                 <div className="flex justify-center items-center h-screen">
                     <PulseLoader color="teal" size={20} loading={loading} />
                 </div>
             ) : messageData ? (
-                <div className="flex justify-center h-screen w-screen">
-                    <table className="flex flex-col w-4/5 items-center">
+                <div className="flex justify-center w-screen">
+                    <table className="flex flex-col w-4/5 items-center bg-green-50 rounded-lg">
                         <thead className='w-full'>
                             <tr className='flex w-full'>
-                                <th className="border-2 w-1/6">Attribute</th>
-                                <th className="border-2 w-5/6">Value</th>
+                                <th className="border border-black w-1/6">Attribute</th>
+                                <th className="border border-black w-5/6">Value</th>
                             </tr>
                         </thead>
                         <tbody className='w-full'>
@@ -92,16 +93,16 @@ function Details() {
                                 if (attribute !== 'tasks') {
                                     return (
                                         <tr key={attribute} className="flex w-full">
-                                            <td className="border text-center w-1/6 text-lg font-serif font-bold italic">
+                                            <td className="border border-black text-center w-1/6 text-lg font-serif font-bold italic">
                                                 {attribute}
                                             </td>
-                                            <td className="border text-center w-5/6 italic">
+                                            <td className="border border-black text-center w-5/6 italic">
                                                 {editableFields[attribute] ? (
                                                     <input
                                                         type="text"
                                                         value={value}
                                                         onChange={(e) => handleInputChange(e, attribute)}
-                                                        className="border w-11/12"
+                                                        className="border border-black w-11/12"
                                                     />
                                                 ) : (
                                                     value
@@ -124,7 +125,7 @@ function Details() {
                                 }
                                 return null;
                             })}
-                            <tr className='flex w-full border justify-center text-lg font-serif font-bold italic'>
+                            <tr className='flex w-full border border-black justify-center text-lg font-serif font-bold italic'>
                                 <td className='flex w-full justify-center items-center'>
                                     Tasks
                                 </td>
@@ -139,15 +140,15 @@ function Details() {
 
                             </tr>
                             <tr className='flex w-full'>
-                                <th className="border-2 w-1/6">Sr #</th>
-                                <th className="border-2 w-4/6">Task</th>
-                                <th className="border-2 w-1/6">Priority</th>
+                                <th className="border border-black w-1/6">Sr #</th>
+                                <th className="border border-black w-4/6">Task</th>
+                                <th className="border border-black w-1/6">Priority</th>
                             </tr>
                             {messageData.tasks.map((task, index) => (
                                 <tr key={index} className='flex w-full'>
-                                    <td className="border text-center w-1/6 text-lg font-serif font-bold italic"># {index + 1}</td>
-                                    <td className="border text-center w-4/6 italic font-serif">{task.task}</td>
-                                    <td className="border text-center w-1/6 italic font-serif font-bold">{task.priority}</td>
+                                    <td className="border border-black text-center w-1/6 text-lg font-serif font-bold italic"># {index + 1}</td>
+                                    <td className="border border-black text-center w-4/6 italic font-serif">{task.task}</td>
+                                    <td className="border border-black text-center w-1/6 italic font-serif font-bold">{task.priority}</td>
                                 </tr>
                             ))}
                         </tbody>
@@ -156,6 +157,7 @@ function Details() {
             ) : (
                 <div>No data found!</div>
             )}
+            </div>
         </>
     );
 }

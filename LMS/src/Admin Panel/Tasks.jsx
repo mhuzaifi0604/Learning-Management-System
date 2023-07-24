@@ -110,8 +110,8 @@ function Tasks() {
 
     return (
         <>
-            <div className='flex flex-col items-center h-screen w-screen text-black'>
-                <h1 className='text-center'>Add or Delete Tasks</h1>
+            <div className='flex flex-col items-center h-screen w-screen text-black bg-[#3e5e51]'>
+                <h1 className='font-bold mb-4 text-white font-serif text-3xl'>Tasks & Notifiations</h1>
                 {loading ? (
                     <div className="flex justify-center items-center h-screen">
                         <PulseLoader color="teal" size={20} loading={loading} />
@@ -119,14 +119,14 @@ function Tasks() {
                 ) : (
                     docdata ? (
                         <div className="flex flex-col justify-center items-center w-screen">
-                            <form onSubmit={addtasks} className="flex flex-row m-5 mt-0 p-4 w-4/5 border-2 border-blue-900 bg-[#170c27] backdrop-filter backdrop-blur-md shadow-lg shadow-teal-100 rounded-md">
+                            <form onSubmit={addtasks} className="flex flex-row w-full gap-2 justify-center items-center mb-4">
                                 <input
                                     type="text"
                                     id="task"
                                     value={task}
                                     onChange={(e) => setTask(e.target.value)}
                                     placeholder="Enter Task"
-                                    className="border mt-2 mr-0 border-blue-500 p-2 w-2/5 rounded-md focus:outline-none focus:border-teal-500 bg-transparent text-white h-10"
+                                    className="basis-1/5 h-8 text-black border-2 border-black space-x-2 rounded-md p-1 placeholder-gray-400 font-bold italic font-serif"
                                 />
                                 <input
                                     type="text"
@@ -134,26 +134,26 @@ function Tasks() {
                                     value={priority}
                                     onChange={(e) => setPriority(e.target.value)}
                                     placeholder="Priority"
-                                    className="border mt-2 border-blue-500 p-2 w-2/5 rounded-md focus:outline-none focus:border-teal-500 bg-transparent text-white h-10 ml-10"
+                                    className="basis-1/5 h-8 text-black border-2 border-black space-x-2 rounded-md p-1 placeholder-gray-400 font-bold italic font-serif"
                                 />
-                                <button className="bg-teal-500 hover:bg-teal-600 text-white py-2 px-4 rounded-md transition duration-300 mt-2 h-10 w-24 ml-10">
-                                    Add Task
+                                <button className="bg-black text-lg font-serif p-1 text-white rounded-md w-max h-8">
+                                    Assign
                                 </button>
                             </form>
-                            <table className="flex flex-col w-4/5 items-center">
+                            <table className="flex flex-col w-4/5 items-center bg-green-50 rounded-lg mb-4">
                                 <thead className='w-full'>
                                     <tr className='flex w-full'>
-                                        <th className="border-2 w-1/6">Sr #</th>
-                                        <th className="border-2 w-4/6">Task</th>
-                                        <th className="border-2 w-1/6">Priority</th>
+                                        <th className="border border-black w-1/6">Sr #</th>
+                                        <th className="border border-black w-4/6">Task</th>
+                                        <th className="border border-black w-1/6">Priority</th>
                                     </tr>
                                 </thead>
                                 <tbody className='flex flex-col w-full'>
                                     {docdata.tasks.map((task, index) => (
                                         <tr key={index} className='flex w-full text-center font-sans italic'>
-                                            <td className="border-2 w-1/6">{index + 1}</td>
-                                            <td className="border-2 w-4/6">{task.task}</td>
-                                            <td className="border-2 w-1/6 font-semibold">{task.priority}
+                                            <td className="border border-black w-1/6">{index + 1}</td>
+                                            <td className="border border-black w-4/6">{task.task}</td>
+                                            <td className="border border-black w-1/6 font-semibold">{task.priority}
                                                 <button onClick={() => handleDelete(index)} className='ml-4 text-md italic'>
                                                     &#x1F5D1;
                                                 </button>
@@ -172,8 +172,8 @@ function Tasks() {
                                     <h2 className='text-black font-extrabold text-2xl italic font-serif underline mb-4 text-center'>Notifications</h2>
                                     <ul className='flex flex-col'>
                                         {docdata.notifications.map((note, index) => (
-                                            <li key={index} className='ml-2 p-2 bg-teal-500 text-black rounded-full mb-4 border-2 border-black w-max'>
-                                                {note}
+                                            <li key={index} className='ml-2 p-2 bg-white text-black rounded-md mb-4 border-2 border-black w-max'>
+                                                {index+1}# - {note}
                                                 <button onClick={() => DeleteNotification(index)} className='ml-4 text-md italic'>
                                                     &#x1F5D1;
                                                 </button>
@@ -182,13 +182,13 @@ function Tasks() {
                                     </ul>
                                 </div>
                             )}
-                            <form onSubmit={addnotification} className='flex w-full'>
+                            <form onSubmit={addnotification} className='flex flex-row w-full gap-2 justify-center items-center'>
                                 <input
                                     type='text'
                                     value={getnote}
                                     onChange={(e) => setnote(e.target.value)}
                                     placeholder='Enter Notification'
-                                    className='flex w-full bg-black border-2 border-white rounded-full text-white p-1'
+                                    className='basis-3/5 h-8 text-black border-2 border-black space-x-2 rounded-md p-1 placeholder-gray-400 font-bold italic font-serif'
                                 />
                                 <button
                                     onClick={addnotification}

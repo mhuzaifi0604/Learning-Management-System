@@ -36,16 +36,16 @@ function SignUp() {
     };
     return (
         <>
-            <form onSubmit={handleSubmit} className="m-5 mt-0 p-6 w-4/5 border-2 border-blue-900 bg-[#170c27] backdrop-filter backdrop-blur-md shadow-lg shadow-teal-100 rounded-md">
+            <form onSubmit={handleSubmit} className="m-5 mt-0 p-6 w-3/5 border-2 border-black bg-gray-200 shadow-lg shadow-black rounded-md">
                 <div className='flex justify-center items-center'>
-                    <h2 className="text-3xl mb-2 font-serif text-justify italic font-semibold text-white text-opacity-90" >Let's Sign You up!</h2>
+                    <h2 className="text-3xl mb-2 font-serif text-justify italic font-semibold text-black text-opacity-90" >Let's Sign You up!</h2>
                 </div>
                 <div className='flex justify-center items-center'>
-                    <h3 className="text-white block mb-5 font-serif italic">
+                    <h3 className="text-black block mb-5 font-serif italic">
                         Please enter your Credentials.
                     </h3>
                 </div>
-                <label htmlFor="email" className="block mb-6 text-white font-serif italic">
+                <label htmlFor="email" className="block mb-6 text-black font-serif italic font-bold">
                     Email
                     <input
                         type="email"
@@ -53,11 +53,11 @@ function SignUp() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Enter your email"
-                        className="border mt-2 border-blue-500 p-2 w-full rounded-md focus:outline-none focus:border-teal-500 bg-transparent text-white"
+                        className="border mt-2 border-black p-2 w-full rounded-md focus:outline-none focus:border-teal-500 bg-transparent text-white"
                     />
                 </label>
 
-                <label htmlFor="password" className="block mb-3 text-white font-serif italic">
+                <label htmlFor="password" className="block mb-3 text-black font-serif italic font-bold">
                     Password
                     <input
                         type="password"
@@ -65,7 +65,7 @@ function SignUp() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Enter your password"
-                        className="border mt-2 border-blue-500 p-2 w-full rounded-md focus:outline-none focus:border-teal-500 bg-transparent text-white"
+                        className="border mt-2 border-black p-2 w-full rounded-md focus:outline-none focus:border-teal-500 bg-transparent text-white"
                         autoComplete='new-password'
                     />
                 </label>
@@ -75,12 +75,12 @@ function SignUp() {
 
                 <button
                     type="submit"
-                    className="bg-teal-500 hover:bg-teal-600 text-white py-2 px-4 rounded-md transition duration-300 mt-4"
+                    className="bg-black text-white py-2 px-4 rounded-md transition duration-300 mt-4"
                 >
                     Sign Up
                 </button>
                 <p className='text-center'>
-                    <a href="#!" className="text-teal-500 text-sm hover:underline">
+                    <a href="#!" className="text-black text-sm hover:underline italic">
                         Already have an account? Sign up
                     </a>
                 </p>

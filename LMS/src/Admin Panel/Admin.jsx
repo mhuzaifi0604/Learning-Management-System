@@ -152,17 +152,17 @@ function Admin() {
   //   };
 
   return (
-    <div className="flex flex-col items-center w-screen">
-      <h1 className="text-2xl font-bold mb-4">Welcome {name}</h1>
-      <div className='w-full mb-1'>
-        <form onSubmit={handleSubmit} className='flex flex-row w-full gap-2'>
+    <div className="flex flex-col items-center h-screen w-screen bg-[#3e5e51]">
+      <h1 className="font-bold mb-4 text-white font-serif text-3xl">Welcome {name[0].toUpperCase()}{name.slice(1, name.length)}</h1>
+      <div className='w-full mb-4'>
+        <form onSubmit={handleSubmit} className='flex flex-row w-full gap-2 justify-center items-center'>
           <input
             type="text"
             name="name"
             value={formData.name}
             onChange={handleChange}
             placeholder="Name"
-            className='basis-1/3 h-8 text-black border border-pink-500 space-x-2 rounded-full p-1'
+            className='basis-1/5 h-8 text-black border-2 border-black space-x-2 rounded-md p-1 placeholder-gray-400 font-bold italic font-serif'
           />
           <input
             type="email"
@@ -170,14 +170,14 @@ function Admin() {
             value={formData.email}
             onChange={handleChange}
             placeholder="Email"
-            className='basis-1/3 h-8 text-black border border-pink-500 space-x-2 rounded-full p-1'
+            className='basis-1/5 h-8 text-black border-2 border-black space-x-2 rounded-md p-1 placeholder-gray-400 font-bold italic font-serif'
           />
           <input
             name="role"
             value={formData.role}
             onChange={handleChange}
             placeholder="role"
-            className='basis-1/3 h-8 text-black border border-pink-500 space-x-2 rounded-full p-1'
+            className='basis-1/5 h-8 text-black border-2 border-black space-x-2 rounded-md p-1 placeholder-gray-400 font-bold italic font-serif'
           />
 
           <input
@@ -185,9 +185,9 @@ function Admin() {
             value={formData.password}
             onChange={handleChange}
             placeholder="password"
-            className='basis-1/3 h-8 text-black border border-pink-500 space-x-2 rounded-full p-1'
+            className='basis-1/5 h-8 text-black border-2 border-black space-x-2 rounded-md p-1 placeholder-gray-400 font-bold italic font-serif'
           />
-          <button type="submit" className='border border-teal-500 text-lg font-serif p-1'>Add</button>
+          <button type="submit" className='bg-black text-lg font-serif p-1 text-white rounded-md w-12'>Add</button>
         </form>
       </div>
       {loading ?
@@ -197,7 +197,7 @@ function Admin() {
         :
         <div className="grid grid-cols-3 gap-4 w-5/6">
           {messages.map((message) => (
-            <div key={message.id} className="flex flex-col items-center border border-green-500 p-4 h-64 relative shadow-lg shadow-black rounded-md">
+            <div key={message.id} className="flex flex-col items-center border-2 border-black p-4 h-64 relative shadow-lg shadow-black rounded-md bg-gray-200">
               <div className='h-24 w-24 rounded-full text-center text-3xl font-extrabold font-serif flex justify-center items-center bg-black text-yellow-500'>
                 {message.name[0].toUpperCase()}
               </div>

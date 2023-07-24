@@ -41,16 +41,16 @@ function Login() {
     };
     return (
         <>
-            <form onSubmit={handleSubmit} className="m-5 mt-0 p-6 w-4/5 border-2 border-blue-900 bg-[#170c27] backdrop-filter backdrop-blur-md shadow-lg shadow-teal-100 rounded-md">
+            <form onSubmit={handleSubmit} className="m-5 mt-0 p-6 w-3/5 border-2 border-black bg-gray-200 shadow-lg shadow-black rounded-md">
                 <div className='flex justify-center items-center'>
-                    <h2 className="text-3xl mb-2 font-serif text-justify italic font-semibold text-white text-opacity-90" >Nice to See you</h2>
+                    <h2 className="text-3xl mb-2 font-serif text-justify italic font-semibold text-black text-opacity-90" >Nice to See you</h2>
                 </div>
                 <div className='flex justify-center items-center'>
-                    <h3 className="text-white block mb-5 font-serif italic">
+                    <h3 className="text-black block mb-5 font-serif italic">
                         Please enter your details.
                     </h3>
                 </div>
-                <label htmlFor="email" className="block mb-6 text-white font-serif italic">
+                <label htmlFor="email" className="block mb-6 text-black font-serif font-bold italic">
                     Email
                     <input
                         type="email"
@@ -58,11 +58,11 @@ function Login() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Enter your email"
-                        className="border mt-2 border-blue-500 p-2 w-full rounded-md focus:outline-none focus:border-teal-500 bg-transparent text-white"
+                        className="border mt-2 border-black p-2 w-full rounded-md focus:outline-none focus:border-teal-500 bg-transparent text-black"
                     />
                 </label>
 
-                <label htmlFor="password" className="block mb-3 text-white font-serif italic">
+                <label htmlFor="password" className="block mb-3 text-black font-serif font-bold italic">
                     Password
                     <input
                         type="password"
@@ -70,7 +70,7 @@ function Login() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Enter your password"
-                        className="border mt-2 border-blue-500 p-2 w-full rounded-md focus:outline-none focus:border-teal-500 bg-transparent text-white"
+                        className="border mt-2 border-black p-2 w-full rounded-md focus:outline-none focus:border-teal-500 bg-transparent text-white"
                         autoComplete='new-password'
                     />
                 </label>
@@ -78,23 +78,23 @@ function Login() {
                 {!check && <p className="text-red-500 text-sm mb-3">{error}</p>}
 
                 <div className="flex items-center justify-between mb-5">
-                    <label htmlFor="check-box" className='appearance-none w-32 h16 rounded-md cursor-pointer text-white'>
-                        <input type="checkbox" id="check-box" className="text-white mr-2 font-serif " />
+                    <label htmlFor="check-box" className='appearance-none w-32 h16 rounded-md cursor-pointer text-black font-bold text-sm'>
+                        <input type="checkbox" id="check-box" className="text-white mr-2 font-serif" />
                         Remember Me
                     </label>
 
-                    <a href="#!" className="text-teal-500 text-sm underline italic font-serif">
+                    <a href="#!" className="text-black text-sm underline italic font-bold font-serif">
                         Forgot Password?
                     </a>
                 </div>
                 <button
                     type="submit"
-                    className="bg-teal-500 hover:bg-teal-600 text-white py-2 px-4 rounded-md transition duration-300"
+                    className="bg-black text-white py-2 px-4 rounded-md font-serif font-extrabold"
                 >
                     Sign in
                 </button>
                 <p className='text-center'>
-                    <a href="#!" className="text-teal-500 text-sm hover:underline">
+                    <a href="#!" className="text-black text-sm hover:underline italic">
                         Don't have an account? Sign up
                     </a>
                 </p>
