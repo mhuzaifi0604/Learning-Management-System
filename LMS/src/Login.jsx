@@ -58,7 +58,7 @@ function Login() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Enter your email"
-                        className="border mt-2 border-black p-2 w-full rounded-md focus:outline-none focus:border-teal-500 bg-transparent text-black"
+                        className="border mt-2 border-black p-2 w-full rounded-md text-black"
                     />
                 </label>
 
@@ -70,7 +70,7 @@ function Login() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Enter your password"
-                        className="border mt-2 border-black p-2 w-full rounded-md focus:outline-none focus:border-teal-500 bg-transparent text-white"
+                        className="border mt-2 border-black p-2 w-full rounded-md text-black"
                         autoComplete='new-password'
                     />
                 </label>
