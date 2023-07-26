@@ -5,6 +5,7 @@ import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import firebaseConfig from '../Configuration';
 import PulseLoader from 'react-spinners/PulseLoader';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 initializeApp(firebaseConfig);
 
@@ -12,6 +13,7 @@ function Admin() {
   const [messages, setMessages] = useState([]);
   const [name, setname] = useState(localStorage.getItem('name'));
   const [loading, setloading] = useState(false);
+  const [enabled, setenabled] = useState(true);
   const [password, setpassword] = useState('');
   const [notifications, setnotifications] = useState([]);
   const [tasks, settasks] = useState([
@@ -120,36 +122,28 @@ function Admin() {
     fetchMessages();
   }, [getuid]);
 
-  //   const handleToggleUserStatus = async (uid) => {
-  //     try {
-  //       setloading(true);
-  //       const auth = getAuth();
-  //       const user = auth.currentUser;
-  //       if (!user) {
-  //         console.error('No authenticated user found.');
-  //         return;
-  //       }
+  const handleToggleUserStatus = async (mail) => {
+    try {
+      const response = await axios.get(`http://localhost:6969/data?email=${mail}`);
+      const updatedData = { email: mail, status: '' };
+      if (response.data.status === 'enabled') {
+        setenabled(false);
+        updatedData.status = 'disabled';
+      } else if (response.data.status === 'disabled') {
+        setenabled(true);
+        updatedData.status = 'enabled';
+      }
+      try {
+        await axios.put(`http://localhost:6969/update`, updatedData);
+        console.log('Status Updated Successfully!');
+      } catch (error) {
+        console.error('No user found!', error);
+      }
+    } catch (error) {
+      console.error('Could not find user in data: ', error);
+    }
 
-  //       // Fetch the user from Firebase Authentication by UID
-  //       const userRecord = getAdditionalUserInfo(auth, uid);
-
-  //       // Toggle the disabled status of the user
-  //       const updatedDisabledStatus = !userRecord.disabled;
-  //       await updateProfile(user, { disabled: updatedDisabledStatus });
-
-  //       // Fetch the updated user list from Firebase Authentication
-  //       const updatedUserList = await auth.listUsers();
-  //       const updatedUserStatus = {};
-  //       updatedUserList.users.forEach((user) => {
-  //         updatedUserStatus[user.uid] = !user.disabled;
-  //       });
-  //       setUserStatus(updatedUserStatus);
-  //     } catch (error) {
-  //       console.error('Error toggling user status in Firebase Authentication:', error);
-  //     } finally {
-  //       setloading(false);
-  //     }
-  //   };
+  };
 
   return (
     <div className="flex flex-col items-center h-screen w-screen bg-[#3e5e51]">
@@ -206,12 +200,12 @@ function Admin() {
               <p className="text-sm font-bold font-serif italic">{message.role}</p>
               <p className="text-md font-serif text-justify">{message.email}</p>
               <div className='flex w-full h-12 gap-1 justify-end absolute bottom-0 p-1'>
-                {/* <button
-                  onClick={() => handleToggleUserStatus(message.UID)}
-                  className={`w-10 text-xl shadow-md shadow-black rounded-md ${userStatus[message.UID] ? 'text-green-500' : 'text-red-500'}`}
+                <button
+                  onClick={() => handleToggleUserStatus(message.email)}
+                  className={`w-10 text-xl shadow-md shadow-black rounded-md ${enabled ? 'bg-green-600' : 'bg-red-600'}`}
                 >
-                  {userStatus[message.UID] ? '🔓' : '🔒'}
-                </button> */}
+                  {enabled ? '🔓' : '🔒'}
+                </button>
                 <button
                   onClick={() => { changeDetails(message.id) }}
                   className='w-10 text-xl shadow-md shadow-black rounded-md'

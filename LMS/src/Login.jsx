@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import firebaseConfig from './Configuration';
+import axios from "axios";
 
 initializeApp(firebaseConfig);
 
@@ -27,18 +28,25 @@ function Login() {
             if (email.slice(email.indexOf('@'), email.length) === '@lms.com') {
                 navigate('/Admin_Dashboard')
             } else {
-                navigate('/User_Dashboard')
+                console.log('hello 1');
+                const response = await axios.get(`http://localhost:6969/data?email=${email}`);
+                if (response.data.status === 'enabled') {
+                    console.log('hello 2');
+                    localStorage.setItem('mail', email);
+                    navigate('/User_Dashboard')
+                } else {
+                    setError('Access Denied - Contact Admin!');
+                    setEmail('');
+                    setPassword('');
+                }
             }
         } catch (error) {
-            setIsLoggedIn(false);
             setError('Invalid Email or Password');
             setEmail('');
             setPassword('');
         }
-        // console.log('email:', email);
-        // console.log('password:', password);
-        // console.log('whose email: ', email.slice(email.indexOf('@'), email.length));
     };
+
     return (
         <>
             <form onSubmit={handleSubmit} className="m-5 mt-0 p-6 w-3/5 border-2 border-black bg-gray-200 shadow-lg shadow-black rounded-md">

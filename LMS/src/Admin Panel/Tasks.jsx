@@ -4,6 +4,7 @@ import PulseLoader from 'react-spinners/PulseLoader';
 import { initializeApp } from 'firebase/app';
 import firebaseConfig from '../Configuration';
 initializeApp(firebaseConfig);
+import axios from 'axios';
 
 function Tasks() {
     const [loading, setloading] = useState(true);
@@ -47,6 +48,10 @@ function Tasks() {
             await updateDoc(doc(collectionRef, id), {
                 tasks: arrayUnion(newTask),
             });
+            await axios.post('http://localhost:6969/add-task', {
+                email: docdata.email,
+                data: newTask,
+            });
             window.location.reload();
             console.log('Task added successfully!');
             setTask('');
@@ -61,12 +66,22 @@ function Tasks() {
         e.preventDefault();
         const db = getFirestore();
         try {
+            const new_notificaition = {
+                role: 'admin',
+                note: getnote
+            }
             setloading(true);
             const collectionRef = collection(db, 'All-Users');
             const newnote = getnote;
             await updateDoc(doc(collectionRef, id), {
                 notifications: arrayUnion(newnote),
             });
+            await axios.post('http://localhost:6969/add-notification', {
+                email: docdata.email,
+                data: new_notificaition,
+            });
+            console.log('Note added Successfully');
+            setnote('');
             window.location.reload();
         } catch (error) {
             console.error('error adding note', error);
