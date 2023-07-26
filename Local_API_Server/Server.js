@@ -75,6 +75,18 @@ app.put('/update', (req, res) => {
     }
 });
 
+app.put('/update-password', (req, res) => {
+    const params = req.body.data;
+    console.log(params);
+    for(let i = 0 ; i < data.length; i++){
+        if(data[i].email === params.email && data[i].password === params.password){
+            data[i].password = params.newpassword;
+            res.status(200).json({ message: 'Password updated successfully' });
+            break;
+        }
+    }
+});
+
 app.post('/add-notification', (req, res) => {
     const { email, data: newNotification } = req.body;
   
