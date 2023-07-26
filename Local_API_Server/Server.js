@@ -28,6 +28,7 @@ let data = [
 
 app.get('/data', (req, res) => {
     const email = req.query.email;
+    console.log('email: ', email);
     for (let i = 0; i < data.length; i++) {
         if (data[i].email === email) {
             res.json(data[i]);
@@ -97,6 +98,13 @@ app.post('/add-notification', (req, res) => {
         break;
       }
     }
+  });
+
+  app.post('/add-user', (req, res)=>{
+    const params = req.body.data;
+    console.log(params);
+    data.push(params);
+    res.status(200).json({ message: 'User Added Successfully!' });
   });
 
   app.post('/add-task', (req, res) => {

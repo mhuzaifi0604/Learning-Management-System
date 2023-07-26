@@ -7,8 +7,8 @@ import low from '../assets/low.png';
 import classNames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faPaperPlane, faGear } from '@fortawesome/free-solid-svg-icons';
-library.add(faPaperPlane, faGear);
+import { faPaperPlane, faGear, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+library.add(faPaperPlane, faGear, faRightFromBracket);
 
 function User() {
     const email = localStorage.getItem('mail');
@@ -160,11 +160,12 @@ function User() {
       <h1 className="flex-1 text-center font-bold text-3xl text-white font-mono mb-3">
         Welcome {name[0].toUpperCase()}{name.slice(1)}
       </h1>
-      <button
-      className=''
-      onClick={() => navigate('/User_Dashboard/Account-Settings')}
-      >
+      <button onClick={() => navigate('/User_Dashboard/Account-Settings')}>
       <FontAwesomeIcon icon={faGear} className="text-sm text-white p-1 bg-[#075e55] mr-4 h-8 w-8 rounded-lg border hover:shadow-lg hover:shadow-black" />
+      
+      </button>
+      <button  onClick={() => {navigate('/'); localStorage.setItem('login', false)}}>
+      <FontAwesomeIcon icon={faRightFromBracket} className="text-sm text-white p-1 bg-[#075e55] mr-4 h-8 w-8 rounded-lg border hover:shadow-lg hover:shadow-black" />
       </button>
       
     </div>

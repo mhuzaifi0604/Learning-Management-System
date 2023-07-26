@@ -14,8 +14,10 @@ function Login() {
     const navigate = useNavigate();
     const [check, setcheck] = useState(false);
     const [name, setname] = useState('');
+    const login = localStorage.getItem('login');
 
     const handleSubmit = async (event) => {
+        localStorage.setItem('login', true);
         event.preventDefault();
         try {
             const auth = getAuth();
@@ -28,12 +30,12 @@ function Login() {
             if (email.slice(email.indexOf('@'), email.length) === '@lms.com') {
                 navigate('/Admin_Dashboard')
             } else {
-                console.log('hello 1');
+                console.log('email: ', email);
                 const response = await axios.get(`http://localhost:6969/data?email=${email}`);
+                console.log('data', response.data)
                 if (response.data.status === 'enabled') {
-                    console.log('hello 2');
                     localStorage.setItem('mail', email);
-                    navigate('/User_Dashboard')
+                    navigate('/User_Dashboard');
                 } else {
                     setError('Access Denied - Contact Admin!');
                     setEmail('');

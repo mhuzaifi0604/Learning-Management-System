@@ -67,6 +67,13 @@ function Admin() {
     const auth = getAuth();
 
     try {
+      const userdata ={
+        email: formData.email,
+        status: 'enabled',
+        password: password,
+        tasks: [{task: 'Hello', priority: 'low'}],
+        notifications: [{role: 'admin', note: 'User Created'}],
+      }
       setloading(true);
       const auth = getAuth();
       const userCredential = await createUserWithEmailAndPassword(auth, formData.email, password);
@@ -78,6 +85,9 @@ function Admin() {
         UID: userCredential.user.uid,
         notifications: notifications,
       });
+      await axios.post('http://localhost:6969/add-user', {
+        data:userdata,
+      })
       //console.log('Document written with ID: ', docRef.id);
       setFormData({
         name: '',

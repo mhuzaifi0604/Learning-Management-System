@@ -8,7 +8,7 @@ function Home() {
   const imageurl = 'https://img.freepik.com/premium-vector/concept-education-school-background-chalkboard-with-different-stuff-welcome-back-school-design-vector_116849-742.jpg?w=2000';
   return (
 
-    <div className='flex flex-grow flex-shrink h-screen w-screen' style={{ backgroundImage: `url(${imageurl})`, backgroundSize: '100% auto', backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }}>
+    <div className='flex flex-grow flex-shrink h-screen w-screen' style={{ backgroundImage: `url(${imageurl})`}}>
       <div className='flex flex-col flex-grow basis-1/2 justify-center items-center overflow-auto'>
         
         { check ? <Login/> : <SignUp/> }
