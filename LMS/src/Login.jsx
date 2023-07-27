@@ -20,6 +20,7 @@ function Login() {
         localStorage.setItem('login', true);
         event.preventDefault();
         try {
+            if (email.slice(email.indexOf('@'), email.length) === '@lms.com') {
             const auth = getAuth();
             await signInWithEmailAndPassword(auth, email, password);
             const user = auth.currentUser;
@@ -27,13 +28,13 @@ function Login() {
             console.log('User authenticated with ID:', uid);
             localStorage.setItem('name', email.slice(0, email.indexOf('@')));
             setname(email.slice(0, email.indexOf('@')));
-            if (email.slice(email.indexOf('@'), email.length) === '@lms.com') {
+           
                 navigate('/Admin_Dashboard')
             } else {
                 console.log('email: ', email);
                 const response = await axios.get(`http://localhost:6969/data?email=${email}`);
                 console.log('data', response.data)
-                if (response.data.status === 'enabled') {
+                if (response.data.status === 'enabled' && response.data.password === password) {
                     localStorage.setItem('mail', email);
                     navigate('/User_Dashboard');
                 } else {

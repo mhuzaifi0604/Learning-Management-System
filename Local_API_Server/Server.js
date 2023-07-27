@@ -27,16 +27,14 @@ let data = [
 
 
 app.get('/data', (req, res) => {
-    const email = req.query.email;
-    console.log('email: ', email);
-    for (let i = 0; i < data.length; i++) {
-        if (data[i].email === email) {
-            res.json(data[i]);
-            break;
-        } else {
-            res.status(404).json({ message: 'User not found' });
-        }
-    }
+  const email = req.query.email;
+  const user = data.find((user) => user.email === email);
+
+  if (user) {
+    res.status(200).json(user);
+  } else {
+    res.status(404).json({ message: 'User not found!' });
+  }
 });
 
 app.get('/all-data', (req, res) => {
@@ -103,7 +101,8 @@ app.post('/add-notification', (req, res) => {
   app.post('/add-user', (req, res)=>{
     const params = req.body.data;
     console.log(params);
-    data.push(params);
+    data = [...data, params];
+    //data.push(params);
     res.status(200).json({ message: 'User Added Successfully!' });
   });
 

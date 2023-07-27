@@ -5,11 +5,19 @@ function Settings() {
     const [email, setemail] = useState('');
     const [password, setpassword] = useState('');
     const [newpass, setnewpass] = useState('');
+    const [confirm, setconfirm] = useState('');
+    const [passwordsMatch, setPasswordsMatch] = useState(false);
     const [check, setcheck] = useState(false);
     const [update, setupdate] = useState(false);
     const [error, setError] = useState('');
     const imageurl = 'https://img.freepik.com/premium-vector/concept-education-school-background-chalkboard-with-different-stuff-welcome-back-school-design-vector_116849-742.jpg?w=2000';
+    
+    useEffect(() => {
+        setPasswordsMatch(newpass === confirm);
+    }, [newpass, confirm]);
+    
     const handleSubmit = async () => {
+        if(setPasswordsMatch){
         try {
             const data = {
                 email: email,
@@ -27,6 +35,9 @@ function Settings() {
         } catch (error) {
             console.error('Something Went Wrong!', error);
         }
+    }else{
+        setError('Passwords Do not Match!');
+    }
     }
     return (
         <>
@@ -70,7 +81,18 @@ function Settings() {
                             value={newpass}
                             onChange={(e) => setnewpass(e.target.value)}
                             placeholder="Enter your password"
-                            className="border mt-2 border-black p-2 w-full rounded-md text-black"
+                            className={`border mt-2 border-black p-2 w-full rounded-md text-black ${passwordsMatch ? 'text-green-700' : ''}`}
+                            autoComplete='new-password'
+                        />
+                    </label>
+                    <label htmlFor="newpassword" className="block mb-3 text-black font-serif font-bold italic">
+                        Confirm New Password
+                        <input
+                            type="password"
+                            value={confirm}
+                            onChange={(e) => setconfirm(e.target.value)}
+                            placeholder="Enter your password"
+                            className={`border mt-2 border-black p-2 w-full rounded-md text-black ${passwordsMatch ? 'text-green-700' : ''}`}
                             autoComplete='new-password'
                         />
                     </label>
