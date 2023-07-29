@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import high from '../assets/high.png';
 import medium from '../assets/medium.png';
@@ -40,7 +40,7 @@ function User() {
     });
     const doneempty = donehigh.length > 0 || donemid.length > 0 || donelow.length > 0;
     const bg_url = 'https://e1.pxfuel.com/desktop-wallpaper/461/478/desktop-wallpaper-whatsapp-dark-whatsapp-chat.jpg';
-    const name = localStorage.getItem('name');
+    const name = localStorage.getItem('name') || email.slice(email[0].toUpperCase, email.indexOf('@'));
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -91,6 +91,7 @@ function User() {
         }
         console.log('Button got clicked');
     }
+    
     const handledoingshigh = (task) => {
         console.log('button got clicked');
         const index = doinghigh.findIndex((t) => t === task);
@@ -156,19 +157,19 @@ function User() {
     return (
         <>
             <div className='flex flex-col h-screen bg-[#3e5e51]'>
-            <div className="flex items-center">
-      <h1 className="flex-1 text-center font-bold text-3xl text-white font-mono mb-3">
-        Welcome {name[0].toUpperCase()}{name.slice(1)}
-      </h1>
-      <button onClick={() => navigate('/User_Dashboard/Account-Settings')}>
-      <FontAwesomeIcon icon={faGear} className="text-sm text-white p-1 bg-[#075e55] mr-4 h-8 w-8 rounded-lg border hover:shadow-lg hover:shadow-black" />
-      
-      </button>
-      <button  onClick={() => {navigate('/'); localStorage.setItem('login', false)}}>
-      <FontAwesomeIcon icon={faRightFromBracket} className="text-sm text-white p-1 bg-[#075e55] mr-4 h-8 w-8 rounded-lg border hover:shadow-lg hover:shadow-black" />
-      </button>
-      
-    </div>
+                <div className="flex items-center">
+                    <h1 className="flex-1 text-center font-bold text-3xl text-white font-mono mb-3">
+                        Welcome {data.name[0].toUpperCase()}{data.name.slice(1)}
+                    </h1>
+                    <button onClick={() => navigate('/User_Dashboard/Account-Settings')}>
+                        <FontAwesomeIcon icon={faGear} className="text-sm text-white p-1 bg-[#075e55] mr-4 h-8 w-8 rounded-lg border hover:shadow-lg hover:shadow-black" />
+
+                    </button>
+                    <button onClick={() => { navigate('/'); localStorage.setItem('login', false) }}>
+                        <FontAwesomeIcon icon={faRightFromBracket} className="text-sm text-white p-1 bg-[#075e55] mr-4 h-8 w-8 rounded-lg border hover:shadow-lg hover:shadow-black" />
+                    </button>
+
+                </div>
                 {/* Everything Below Heading */}
                 <div className='flex w-full h-full gap-2'>
                     {/*Full Do's Grid*/}

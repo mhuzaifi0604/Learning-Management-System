@@ -62,6 +62,7 @@ function Tasks() {
             setloading(false);
         }
     };
+
     const addnotification = async (e) => {
         e.preventDefault();
         const db = getFirestore();
@@ -99,11 +100,15 @@ function Tasks() {
                 const messageRef = doc(db, 'All-Users', id);
                 await updateDoc(messageRef, { tasks: tasksArray });
                 setdocdata({ ...docdata, tasks: tasksArray });
+                console.log('task to delete: ', docdata.tasks[index].task);
+                const response = await axios.delete(`http://localhost:6969/tasks/${docdata.tasks[index].task}`);
+                console.log(response);
             }
         } catch (error) {
             console.error('Error deleting task:', error);
         }
     };
+
     const DeleteNotification = async (index) => {
         try {
             if (docdata && docdata.notifications.length > 0) {
@@ -114,8 +119,12 @@ function Tasks() {
                 const messageRef = doc(db, 'All-Users', id);
                 await updateDoc(messageRef, { notifications: notes });
                 setnotifications(notes);
+                console.log('note to be deleted: ', docdata.notifications[index]);
+                const response = await axios.delete(`http://localhost:6969/delete-note/${docdata.notifications[index]}`);
+                console.log(response);
                 window.location.reload();
             }
+            
         } catch (error) {
             console.error('error deleting notification: ', error);
         } finally {
@@ -155,6 +164,7 @@ function Tasks() {
                                     Assign
                                 </button>
                             </form>
+
                             <table className="flex flex-col w-4/5 items-center bg-green-50 rounded-lg mb-4">
                                 <thead className='w-full'>
                                     <tr className='flex w-full'>
@@ -178,6 +188,7 @@ function Tasks() {
                                 </tbody>
 
                             </table>
+
                             {loading ? (
                                 <div className="flex justify-center items-center h-screen">
                                     <PulseLoader color="teal" size={20} loading={loading} />

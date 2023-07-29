@@ -90,7 +90,7 @@ function Details() {
                         </thead>
                         <tbody className='w-full'>
                             {Object.entries(messageData).map(([attribute, value]) => {
-                                if (attribute !== 'tasks') {
+                                if (attribute !== 'tasks' && attribute !== 'notifications') {
                                     return (
                                         <tr key={attribute} className="flex w-full">
                                             <td className="border border-black text-center w-1/6 text-lg font-serif font-bold italic">

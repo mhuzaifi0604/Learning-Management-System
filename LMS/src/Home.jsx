@@ -32,13 +32,6 @@ function Home() {
           </div>
         </div>
       </div>
-      {/* <div className='flex flex-grow basis-1/2 overflow-auto bg-gray-400 text-black'>
-        <img
-          src={file}
-          alt="image from unsplash"
-          className="w-full object-cover"
-        />
-      </div> */}
     </div>
   )
 }

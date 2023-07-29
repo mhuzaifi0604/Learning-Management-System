@@ -14,29 +14,27 @@ function Login() {
     const navigate = useNavigate();
     const [check, setcheck] = useState(false);
     const [name, setname] = useState('');
-    const login = localStorage.getItem('login');
+    //const login = localStorage.getItem('login_state');
 
     const handleSubmit = async (event) => {
         localStorage.setItem('login', true);
         event.preventDefault();
         try {
             if (email.slice(email.indexOf('@'), email.length) === '@lms.com') {
-            const auth = getAuth();
-            await signInWithEmailAndPassword(auth, email, password);
-            const user = auth.currentUser;
-            const uid = user.uid;
-            console.log('User authenticated with ID:', uid);
-            localStorage.setItem('name', email.slice(0, email.indexOf('@')));
-            setname(email.slice(0, email.indexOf('@')));
-           
-                navigate('/Admin_Dashboard')
+                const auth = getAuth();
+                await signInWithEmailAndPassword(auth, email, password);
+                const user = auth.currentUser;
+                const uid = user.uid;
+                console.log('User authenticated with ID:', uid);
+                localStorage.setItem('name', email.slice(0, email.indexOf('@')));
+                setname(email.slice(0, email.indexOf('@')));
+                    navigate('/Admin_Dashboard');
             } else {
                 console.log('email: ', email);
                 const response = await axios.get(`http://localhost:6969/data?email=${email}`);
-                console.log('data', response.data)
                 if (response.data.status === 'enabled' && response.data.password === password) {
                     localStorage.setItem('mail', email);
-                    navigate('/User_Dashboard');
+                        navigate('/User_Dashboard');
                 } else {
                     setError('Access Denied - Contact Admin!');
                     setEmail('');
@@ -82,7 +80,6 @@ function Login() {
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Enter your password"
                         className="border mt-2 border-black p-2 w-full rounded-md text-black"
-                        autoComplete='new-password'
                     />
                 </label>
 

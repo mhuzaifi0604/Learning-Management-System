@@ -39,13 +39,16 @@ function Admin() {
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id, email) => {
     const db = getFirestore();
     try {
       setloading(true);
       await deleteDoc(doc(db, 'All-Users', id));
       //console.log('Document with ID deleted: ', id);
       setMessages((prevMessages) => prevMessages.filter((message) => message.id !== id));
+      console.log('email: ', email);
+        const response = await axios.delete(`http://localhost:6969/delete-user?email=${email}`);
+        console.log(response);
     } catch (error) {
       console.error('Error deleting document from Firestore:', error);
     } finally {
@@ -68,6 +71,7 @@ function Admin() {
 
     try {
       const userdata ={
+        name: formData.name,
         email: formData.email,
         status: 'enabled',
         password: password,
@@ -223,7 +227,7 @@ function Admin() {
                   &#x270F;
                 </button>
                 <button
-                  onClick={() => { handleDelete(message.id) }}
+                  onClick={() => { handleDelete(message.id, message.email) }}
                   className='w-10 text-xl shadow-md shadow-black rounded-md'
                 >
                   &#x1F5D1;
