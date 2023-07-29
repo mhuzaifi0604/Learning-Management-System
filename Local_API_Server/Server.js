@@ -111,20 +111,14 @@ app.put('/update', (req, res) => {
   const updation = req.body.status;
   console.log(email, ', ', updation);
   // finding data based on email recieved
-  for (let i = 0; i < data.length; i++) {
-    if (data[i].email === email) {
-      // updating status
-      data[i].status = updation;
-      console.log('Status Updated successfully: ', data[i].status);
-      break;
-    }
-    else {
-      // returning error if user not in api
-      res.status(404).json({ message: 'User not found' });
-    }
+  const user = data.find((user) => user.email === email);
+  if(user){
+    user.status = updation;
+    res.send('Status Updated Successfully!');
+  }else{
+    res.send('No Such User Found!');
   }
 });
-
 
 // putting req to update password
 app.put('/update-password', (req, res) => {
