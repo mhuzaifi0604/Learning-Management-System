@@ -1,3 +1,4 @@
+//Making important imports
 import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
@@ -5,43 +6,55 @@ import { initializeApp } from 'firebase/app';
 import firebaseConfig from './Configuration';
 import axios from "axios";
 
+// initializing firebase application
 initializeApp(firebaseConfig);
 
-function Login() {
+function Login({ setIsLoggedIn }) {
+    // necessory state variable declarations
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
     const [check, setcheck] = useState(false);
     const [name, setname] = useState('');
-    //const login = localStorage.getItem('login_state');
 
+    // function for handling the submission of form/ Clicking of sign In button
     const handleSubmit = async (event) => {
-        localStorage.setItem('login', true);
+        // preventing default actions
         event.preventDefault();
+        // using try catch for successfull and denail of events
         try {
+            // checking if email entered belongs to an Admin or a User
             if (email.slice(email.indexOf('@'), email.length) === '@lms.com') {
+                // getting auth token from firebase
                 const auth = getAuth();
+                // signing in firebase using form entered email password and token above with asynchronus function
                 await signInWithEmailAndPassword(auth, email, password);
                 const user = auth.currentUser;
                 const uid = user.uid;
-                console.log('User authenticated with ID:', uid);
+                // setting name of admin in localstorage for later use
                 localStorage.setItem('name', email.slice(0, email.indexOf('@')));
+                // setters for state variables
                 setname(email.slice(0, email.indexOf('@')));
-                    navigate('/Admin_Dashboard');
-            } else {
-                console.log('email: ', email);
+                setIsLoggedIn(true);
+                navigate('/Admin_Dashboard'); //navigating to Admin Dashboard in successfull authentication
+            
+            } else { // implementing authentication for Users
+                // getting user from Local Server API
                 const response = await axios.get(`http://localhost:6969/data?email=${email}`);
+                // checking status and password of user against its details based on email in API
                 if (response.data.status === 'enabled' && response.data.password === password) {
+                    // setters for state variables
                     localStorage.setItem('mail', email);
-                        navigate('/User_Dashboard');
-                } else {
-                    setError('Access Denied - Contact Admin!');
+                    setIsLoggedIn(true);
+                    navigate('/User_Dashboard');// navigating to user dashboard
+                } else { // check for invalid password or disabled user
+                    setError('Access Denied OR Password did not match - Contact Admin!');
                     setEmail('');
                     setPassword('');
                 }
             }
-        } catch (error) {
+        } catch (error) { // check for accounts found in firebase or not
             setError('Invalid Email or Password');
             setEmail('');
             setPassword('');
@@ -50,6 +63,7 @@ function Login() {
 
     return (
         <>
+            {/* Login Form for Authentication */}
             <form onSubmit={handleSubmit} className="m-5 mt-0 p-6 w-3/5 border-2 border-black bg-gray-200 shadow-lg shadow-black rounded-md">
                 <div className='flex justify-center items-center'>
                     <h2 className="text-3xl mb-2 font-serif text-justify italic font-semibold text-black text-opacity-90" >Nice to See you</h2>
@@ -59,6 +73,7 @@ function Login() {
                         Please enter your details.
                     </h3>
                 </div>
+                {/* Input field for email of the user */}
                 <label htmlFor="email" className="block mb-6 text-black font-serif font-bold italic">
                     Email
                     <input
@@ -70,7 +85,7 @@ function Login() {
                         className="border mt-2 border-black p-2 w-full rounded-md text-black"
                     />
                 </label>
-
+                {/* Input field for password of the user */}
                 <label htmlFor="password" className="block mb-3 text-black font-serif font-bold italic">
                     Password
                     <input
@@ -82,7 +97,7 @@ function Login() {
                         className="border mt-2 border-black p-2 w-full rounded-md text-black"
                     />
                 </label>
-
+                {/* displaying errors if any */}
                 {!check && <p className="text-red-500 text-sm mb-3">{error}</p>}
 
                 <div className="flex items-center justify-between mb-5">
@@ -95,6 +110,7 @@ function Login() {
                         Forgot Password?
                     </a>
                 </div>
+                {/* Sign In Button */}
                 <button
                     type="submit"
                     className="bg-black text-white py-2 px-4 rounded-md font-serif font-extrabold"

@@ -10,7 +10,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faPaperPlane, faGear, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 library.add(faPaperPlane, faGear, faRightFromBracket);
 
-function User() {
+function User({setIsLoggedIn}) {
     const email = localStorage.getItem('mail');
     const [data, setData] = useState({});
     const [msg, setmsg] = useState('');
@@ -165,7 +165,7 @@ function User() {
                         <FontAwesomeIcon icon={faGear} className="text-sm text-white p-1 bg-[#075e55] mr-4 h-8 w-8 rounded-lg border hover:shadow-lg hover:shadow-black" />
 
                     </button>
-                    <button onClick={() => { navigate('/'); localStorage.setItem('login', false) }}>
+                    <button onClick={() => { navigate('/'); setIsLoggedIn(false);}}>
                         <FontAwesomeIcon icon={faRightFromBracket} className="text-sm text-white p-1 bg-[#075e55] mr-4 h-8 w-8 rounded-lg border hover:shadow-lg hover:shadow-black" />
                     </button>
 

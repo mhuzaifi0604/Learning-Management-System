@@ -8,12 +8,12 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faRepeat } from '@fortawesome/free-solid-svg-icons';
-library.add(faRepeat);
+import { faRepeat, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+library.add(faRepeat, faRightFromBracket);
 
 initializeApp(firebaseConfig);
 
-function Admin() {
+function Admin({setIsLoggedIn}) {
   const [messages, setMessages] = useState([]);
   const [loading, setloading] = useState(false);
   const [change, setchange] = useState(true);
@@ -182,6 +182,9 @@ function Admin() {
         </h1>
         <button onClick={() => { setchange(!change) }}>
           <FontAwesomeIcon icon={faRepeat} className="text-sm text-white p-1 bg-[#075e55] mr-4 h-8 w-8 rounded-lg border hover:shadow-lg hover:shadow-black" />
+        </button>
+        <button onClick={() => { navigate('/'); setIsLoggedIn(false);}}>
+          <FontAwesomeIcon icon={faRightFromBracket} className="text-sm text-white p-1 bg-[#075e55] mr-4 h-8 w-8 rounded-lg border hover:shadow-lg hover:shadow-black" />
         </button>
       </div>
 
