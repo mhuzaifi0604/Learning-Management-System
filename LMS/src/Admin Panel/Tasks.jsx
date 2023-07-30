@@ -6,7 +6,8 @@ import firebaseConfig from '../Configuration';
 initializeApp(firebaseConfig);
 import axios from 'axios';
 
-function Tasks() {
+function Tasks({setIsLoggedIn}) {
+    //setIsLoggedIn(true);
     const [loading, setloading] = useState(true);
     const [docdata, setdocdata] = useState(null);
     const [notifications, setnotifications] = useState([]);
@@ -15,33 +16,32 @@ function Tasks() {
     const [task, setTask] = useState('');
     const [priority, setPriority] = useState('');
 
-    useEffect(() => {
-        const fetchMessageDetails = async () => {
-            try {
-                setloading(true);
-                const db = getFirestore();
-                const messageRef = doc(db, 'All-Users', id);
-                const messageSnapshot = await getDoc(messageRef);
-                if (messageSnapshot.exists()) {
-                    setdocdata(messageSnapshot.data());
-                } else {
-                    console.log('No Such document!');
-                }
-            } catch (error) {
-                console.error('error Fetching document details', error);
-            } finally {
-                setloading(false);
+    const fetchMessageDetails = async () => {
+        try {
+            setloading(true);
+            const db = getFirestore();
+            const messageRef = doc(db, 'All-Users', id);
+            const messageSnapshot = await getDoc(messageRef);
+            if (messageSnapshot.exists()) {
+                setdocdata(messageSnapshot.data());
+            } else {
+                console.log('No Such document!');
             }
-        };
-
+        } catch (error) {
+            console.error('error Fetching document details', error);
+        } finally {
+            setloading(false);
+        }
+    };
+    useEffect(() => {
         fetchMessageDetails();
-
     }, [id]);
 
     const addtasks = async (e) => {
         e.preventDefault();
         const db = getFirestore();
         try {
+            const tasksArray = docdata.tasks;
             setloading(true);
             const collectionRef = collection(db, 'All-Users');
             const newTask = { task, priority };
@@ -52,10 +52,12 @@ function Tasks() {
                 email: docdata.email,
                 data: newTask,
             });
-            window.location.reload();
+            //window.location.reload();
             console.log('Task added successfully!');
             setTask('');
             setPriority('');
+            //setdocdata({ ...docdata, tasks: {...tasksArray, newTask} });
+            await fetchMessageDetails();
         } catch (error) {
             console.error('Error adding task:', error);
         } finally {
@@ -83,7 +85,7 @@ function Tasks() {
             });
             console.log('Note added Successfully');
             setnote('');
-            window.location.reload();
+            await fetchMessageDetails();
         } catch (error) {
             console.error('error adding note', error);
         } finally {
@@ -94,18 +96,20 @@ function Tasks() {
     const handleDelete = async (index) => {
         try {
             if (docdata && docdata.tasks && docdata.tasks.length > 0) {
+                setloading(true);
                 const tasksArray = [...docdata.tasks];
                 tasksArray.splice(index, 1); // Remove the task at the specified index
                 const db = getFirestore();
                 const messageRef = doc(db, 'All-Users', id);
                 await updateDoc(messageRef, { tasks: tasksArray });
                 setdocdata({ ...docdata, tasks: tasksArray });
-                console.log('task to delete: ', docdata.tasks[index].task);
+                await fetchMessageDetails();
                 const response = await axios.delete(`http://localhost:6969/tasks/${docdata.tasks[index].task}`);
-                console.log(response);
             }
         } catch (error) {
             console.error('Error deleting task:', error);
+        }finally{
+            setloading(false);
         }
     };
 
@@ -119,10 +123,14 @@ function Tasks() {
                 const messageRef = doc(db, 'All-Users', id);
                 await updateDoc(messageRef, { notifications: notes });
                 setnotifications(notes);
-                console.log('note to be deleted: ', docdata.notifications[index]);
                 const response = await axios.delete(`http://localhost:6969/delete-note/${docdata.notifications[index]}`);
                 console.log(response);
-                window.location.reload();
+                setdocdata((prevData) => ({
+                    ...prevData,
+                    notifications: notes
+                  }));
+                
+                await fetchMessageDetails();
             }
             
         } catch (error) {

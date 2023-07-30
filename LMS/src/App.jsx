@@ -19,6 +19,12 @@ const PrivateRoute = ({ component: Component, isloggedin, setIsLoggedIn, ...rest
   const navigate = useNavigate();
 // navigating to home if note loggedin
   useEffect(() => {
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    if (isLoggedIn === 'true') {
+      setIsLoggedIn(true);
+    }else{
+      setIsLoggedIn(false);
+    }
     if (!isloggedin) {
       navigate('/');
     }
@@ -30,10 +36,11 @@ const PrivateRoute = ({ component: Component, isloggedin, setIsLoggedIn, ...rest
 // function for app to begin
 function App() {
   // declaring and initializing necessory state variables
-  const [isloggedin, setisloggedin] = useState(false);
+  const [isloggedin, setisloggedin] = useState(localStorage.getItem('isLoggedIn'));
   // function for setting login state for protected routes
   const setIsLoggedIn = (isLoggedIn) => {
     setisloggedin(isLoggedIn);
+    localStorage.setItem('isLoggedIn', isLoggedIn);
   };
   // rendering the DOM
   return (
@@ -45,9 +52,9 @@ function App() {
             {/* calling components to be rendered using private routes */}
             <Route path="/" element={<Home isloggedin={isloggedin} setIsLoggedIn={setIsLoggedIn} />} />
             <Route path="/Admin_Dashboard" element={<PrivateRoute component={Admin} isloggedin={isloggedin} setIsLoggedIn={setIsLoggedIn} />} />
-            <Route path="/Admin_Dashboard/:newpage" element={<PrivateRoute component={Admin_pager} isloggedin={isloggedin} />} />
+            <Route path="/Admin_Dashboard/:newpage" element={<PrivateRoute component={Admin_pager} isloggedin={isloggedin} setIsLoggedIn={setIsLoggedIn} />} />
             <Route path="/User_Dashboard" element={<PrivateRoute component={User} isloggedin={isloggedin} setIsLoggedIn={setIsLoggedIn} />} />
-            <Route path="/User_Dashboard/:new_page" element={<PrivateRoute component={User_pager} isloggedin={isloggedin} />} />
+            <Route path="/User_Dashboard/:new_page" element={<PrivateRoute component={User_pager} isloggedin={isloggedin} setIsLoggedIn={setIsLoggedIn} />} />
           </Routes>
         </Router>
       </div>

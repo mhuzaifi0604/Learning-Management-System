@@ -48,21 +48,18 @@ function Admin({setIsLoggedIn}) {
     try {
       setloading(true);
       await deleteDoc(doc(db, 'All-Users', id));
-      //console.log('Document with ID deleted: ', id);
       setMessages((prevMessages) => prevMessages.filter((message) => message.id !== id));
-      console.log('email: ', email);
       const response = await axios.delete(`http://localhost:6969/delete-user?email=${email}`);
-      console.log(response);
     } catch (error) {
       console.error('Error deleting document from Firestore:', error);
     } finally {
       setloading(false);
     }
-    //window.location.reload();
   }
 
   const changeDetails = (id) => {
     localStorage.setItem('message_id', id);
+    setIsLoggedIn(true);
     navigate('/Admin_Dashboard/Change-Details')
 
   }
@@ -85,7 +82,6 @@ function Admin({setIsLoggedIn}) {
       setloading(true);
       const auth = getAuth();
       const userCredential = await createUserWithEmailAndPassword(auth, formData.email, passwordinput);
-      //console.log('User signed Up with id: ', auth.currentUser.uid);
       const docRef = await addDoc(collection(db, 'All-Users'), {
         ...formData,
         password: passwordinput,
@@ -97,7 +93,6 @@ function Admin({setIsLoggedIn}) {
       await axios.post('http://localhost:6969/add-user', {
         data: userdata,
       })
-      //console.log('Document written with ID: ', docRef.id);
       
       setFormData({
         name: '',
@@ -109,13 +104,11 @@ function Admin({setIsLoggedIn}) {
       const messagesData = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
       setMessages(messagesData);
       setuid(auth.currentUser.uid);
-      //console.log('uid in try: ', userCredential.user.uid)
     } catch (error) {
       console.error('Error storing data in Firestore:', error);
     } finally {
       setloading(false);
     }
-    //setpassword('');
   };
 
   useEffect(() => {
@@ -133,7 +126,6 @@ function Admin({setIsLoggedIn}) {
           userStatusObj[message.UID] = !message.disabled;
         });
         setUserStatus(userStatusObj);
-        //console.log('UID: ', getuid);
       } catch (error) {
         console.error('Error fetching data from Firestore:', error);
       } finally {
@@ -145,7 +137,6 @@ function Admin({setIsLoggedIn}) {
 
   const handleToggleUserStatus = async (mail, status, id) => {
     try {
-      console.log('id: ', id);
       const db = getFirestore();
       const messageRef = doc(db, 'All-Users', id);
       const newStatus = status === 'enabled' ? 'disabled' : 'enabled';
@@ -167,7 +158,6 @@ function Admin({setIsLoggedIn}) {
         updatedData.status = 'enabled';
       }
         const reply = await axios.put(`http://localhost:6969/update`, updatedData);
-        console.log(reply);
     } catch (error) {
       console.error('Could not find user in data: ', error);
     }

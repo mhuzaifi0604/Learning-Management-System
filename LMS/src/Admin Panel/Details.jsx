@@ -3,7 +3,7 @@ import { getFirestore, doc, getDoc, updateDoc } from 'firebase/firestore';
 import PulseLoader from 'react-spinners/PulseLoader';
 import { useNavigate } from 'react-router-dom';
 
-function Details() {
+function Details({setIsLoggedIn}) {
     const id = localStorage.getItem('message_id');
     const [messageData, setMessageData] = useState(null);
     const [loading, setloading] = useState(false);
@@ -68,6 +68,7 @@ function Details() {
     };
 
     const handletasks = () => {
+        setIsLoggedIn(true);
         navigate('/Admin_Dashboard/Assign-Tasks')
     }
 

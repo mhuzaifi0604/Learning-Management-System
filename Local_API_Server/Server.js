@@ -69,21 +69,22 @@ app.delete('/delete-note/:note', (req, res) => {
   const note = req.params.note;
   console.log('note: ', note);
   // searching for note
-  for (let i=0; i<data.length; i++){
-    for (let j=0; j<data[i].notifications.length; j++){
-      if(data[i].notifications[j].note === note){
-        const index = data[i].notifications.findIndex((note) => note.note === note);
-        if(index !== 1){
+  for (let i = 0; i < data.length; i++) {
+    for (let j = 0; j < data[i].notifications.length; j++) {
+      if (data[i].notifications[j].note === note) {
+        const index = data[i].notifications.findIndex((item) => item.note === note);
+        if (index !== -1) { // Use -1 instead of 1 to check if note was found
           data[i].notifications.splice(index, 1);
           res.send('Notification Deleted Successfully!');
           break;
-        }else{
+        } else {
           res.send('No such Note Found Yet!');
         }
       }
     }
   }
 });
+
 
 // delete request for deleting user based on email
 app.delete('/delete-user', (req, res) => {
@@ -140,16 +141,18 @@ app.post('/add-notification', (req, res) => {
   // getting note data using req body
   const { email, data: newNotification } = req.body;
 
-  // searching for reaplavent user based on email
-  for (let i = 0; i < data.length; i++) {
-    if (data[i].email === email) {
-      // pushing note and sender in users notifications array
-      data[i].notifications.push(newNotification);
-      res.send('Notification added successfully.'); // sending response
-      break;
-    }
+  // searching for relevant user based on email
+  const userIndex = data.findIndex((user) => user.email === email);
+
+  if (userIndex !== -1) {
+    // If the user is found, push the new notification to their notifications array
+    data[userIndex].notifications.push(newNotification);
+    res.send('Notification added successfully.'); // sending response
+  } else {
+    res.status(404).send('User not found.'); // Sending a 404 status if user not found
   }
 });
+
 
 // posting new user in api data array
 app.post('/add-user', (req, res) => {

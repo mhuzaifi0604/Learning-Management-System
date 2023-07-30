@@ -1,7 +1,7 @@
 import react, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-function Settings() {
+function Settings({setIsLoggedIn}) {
     const [email, setemail] = useState('');
     const [password, setpassword] = useState('');
     const [newpass, setnewpass] = useState('');

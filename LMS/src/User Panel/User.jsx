@@ -8,6 +8,7 @@ import classNames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faPaperPlane, faGear, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { deleteDoc } from 'firebase/firestore';
 library.add(faPaperPlane, faGear, faRightFromBracket);
 
 function User({setIsLoggedIn}) {
@@ -47,18 +48,20 @@ function User({setIsLoggedIn}) {
         localStorage.setItem('doinghigh', JSON.stringify(doinghigh));
         localStorage.setItem('doingmid', JSON.stringify(doingmid));
         localStorage.setItem('doinglow', JSON.stringify(doinglow));
-    }, [doinghigh, doingmid, doinglow]);
+        localStorage.setItem('donehigh', JSON.stringify(donehigh));
+        localStorage.setItem('donemid', JSON.stringify(donemid));
+        localStorage.setItem('donelow', JSON.stringify(donelow));
+    }, [doinghigh, doingmid, doinglow, donehigh, donemid, donelow]);
 
+    const fetchData = async () => {
+        try {
+            const response = await axios.get(`http://localhost:6969/data?email=${email}`);
+            setData(response.data);
+        } catch (error) {
+            console.error('Error Fetching Data', error);
+        }
+    };
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get(`http://localhost:6969/data?email=${email}`);
-                setData(response.data);
-            } catch (error) {
-                console.error('Error Fetching Data', error);
-            }
-        };
-
         fetchData();
     }, [email]);
 
@@ -89,46 +92,92 @@ function User({setIsLoggedIn}) {
         } catch (error) {
             console.error('error deleting task', error);
         }
-        console.log('Button got clicked');
+    }
+
+    const handledones = async(task) => {
+        try {
+            const str= task.task;
+            const response = await axios.delete(`http://localhost:6969/tasks/${task.task}`);
+            console.log('Task Deleted Successfully!');
+            if (task.priority === 'high') {
+                setdonehigh([...donehigh, task.task]);
+            } else if (task.priority === 'medium') {
+                setdonemid([...donemid, task.task]);
+            } else if (task.priority === 'low') {
+                setdonelow([...donelow, task.task]);
+            }
+            setData((prevData) => ({
+                ...prevData,
+                tasks: prevData.tasks.filter((t) => t.task !== task.task),
+            }));
+        } catch (error) {
+            console.error('error deleting task', error);
+        }
     }
     
-    const handledoingshigh = (task) => {
-        console.log('button got clicked');
-        const index = doinghigh.findIndex((t) => t === task);
-        console.log('index: ', index);
-        if (index !== -1) {
-            const deletedTask = doinghigh.splice(index, 1)[0];
-            console.log('deleted task: ', deletedTask);
-            setdoinghigh([...doinghigh]); // Update the state to re-render the component
-            setdonehigh((prevDoneHigh) => [...prevDoneHigh, deletedTask]);
-            localStorage.setItem('doinghigh', JSON.stringify(doinghigh)); // Update the localStorage for 'doinghigh'
-            localStorage.setItem('donehigh', JSON.stringify([...donehigh, deletedTask])); // Update the localStorage for 'donehigh'
-            console.log('high priority task got deleted');
+    const handledoings = (task, priority) => {
+        if (priority === 'high') {
+            const index = doinghigh.findIndex((t) => t === task);
+            if (index !== -1) {
+                const deletedTask = doinghigh.splice(index, 1)[0];
+                setdoinghigh([...doinghigh]); // Update the state to re-render the component
+                setdonehigh((prevDoneHigh) => [...prevDoneHigh, deletedTask]);
+                localStorage.setItem('doinghigh', JSON.stringify(doinghigh)); // Update the localStorage for 'doinghigh'
+                localStorage.setItem('donehigh', JSON.stringify([...donehigh, deletedTask])); // Update the localStorage for 'donehigh'
+            }
+        } else if (priority === 'mid') {
+            const index = doingmid.findIndex((t) => t === task);
+            if (index !== -1) {
+                const deletedTask = doingmid.splice(index, 1)[0];
+                setdoingmid([...doingmid]); // Update the state to re-render the component
+                setdonemid((prevDoneMid) => [...prevDoneMid, deletedTask]);
+                localStorage.setItem('doingmid', JSON.stringify(doingmid)); // Update the localStorage for 'doingmid'
+                localStorage.setItem('donemid', JSON.stringify([...donemid, deletedTask])); // Update the localStorage for 'donemid'
+                
+            }
+        }else if (priority === 'low') {
+            const index = doinglow.findIndex((t) => t === task);
+            if (index !== -1) {
+                const deletedTask = doinglow.splice(index, 1)[0];
+                setdoinglow([...doinglow]); // Update the state to re-render the component
+                setdonelow((prevDoneLow) => [...prevDoneLow, deletedTask]);
+                localStorage.setItem('doinglow', JSON.stringify(doinglow)); // Update the localStorage for 'doinglow'
+                localStorage.setItem('donelow', JSON.stringify([...donelow, deletedTask])); // Update the localStorage for 'donelow'
+            }
         }
     }
-    const handledoingsmid = (task) => {
-        const index = doingmid.findIndex((t) => t === task);
-        if (index !== -1) {
-            const deletedTask = doingmid.splice(index, 1)[0];
-            setdoingmid([...doingmid]); // Update the state to re-render the component
-            setdonemid((prevDoneMid) => [...prevDoneMid, deletedTask]);
-            localStorage.setItem('doingmid', JSON.stringify(doingmid)); // Update the localStorage for 'doingmid'
-            localStorage.setItem('donemid', JSON.stringify([...donemid, deletedTask])); // Update the localStorage for 'donemid'
-            console.log('mid priority task got deleted');
+    const backtodoings = async(task, priority) => {
+        if(priority === 'high'){
+            const index = donehigh.findIndex((t) => t === task);
+            if(index !== -1) {
+                const deletedTask = donehigh.splice(index, 1)[0];
+                setdonehigh([...donehigh]);
+                setdoinghigh((prevDoneHigh) => [...prevDoneHigh, deletedTask]);
+                localStorage.setItem('donehigh', JSON.stringify(donehigh)); // Update the localStorage for 'doinghigh'
+                localStorage.setItem('doinghigh', JSON.stringify([...doinghigh, deletedTask])); // Update the localStorage for 'donehigh'
+            }
+        }else if(priority === 'mid'){
+            const index = donemid.findIndex((t) => t === task);
+            if(index !== -1) {
+                const deletedTask = donemid.splice(index, 1)[0];
+                setdonemid([...donemid]);
+                setdoingmid((prevDonemid) => [...prevDonemid, deletedTask]);
+                localStorage.setItem('donemid', JSON.stringify(donemid)); // Update the localStorage for 'doinghigh'
+                localStorage.setItem('doingmid', JSON.stringify([...doingmid, deletedTask])); // Update the localStorage for 'donehigh'
+            }
+        }else if(priority === 'low'){
+            const index = donelow.findIndex((t) => t === task);
+            if(index !== -1) {
+                const deletedTask = donelow.splice(index, 1)[0];
+                setdonelow([...donelow]);
+                setdoinglow((prevDonelow) => [...prevDonelow, deletedTask]);
+                localStorage.setItem('donelow', JSON.stringify(donelow)); // Update the localStorage for 'doinghigh'
+                localStorage.setItem('doinglow', JSON.stringify([...doinglow, deletedTask])); // Update the localStorage for 'donehigh'
+            }
         }
     }
-    const handledoingslow = (task) => {
-        const index = doinglow.findIndex((t) => t === task);
-        if (index !== -1) {
-            const deletedTask = doinglow.splice(index, 1)[0];
-            setdoinglow([...doinglow]); // Update the state to re-render the component
-            setdonelow((prevDoneLow) => [...prevDoneLow, deletedTask]);
-            localStorage.setItem('doinglow', JSON.stringify(doinglow)); // Update the localStorage for 'doinglow'
-            localStorage.setItem('donelow', JSON.stringify([...donelow, deletedTask])); // Update the localStorage for 'donelow'
-            console.log('low priority task got deleted');
-        }
-    }
-    const addnote = async () => {
+    const addnote = async (event) => {
+        event.preventDefault();
         const new_notificaition = {
             role: 'user',
             note: msg
@@ -139,6 +188,11 @@ function User({setIsLoggedIn}) {
                 data: new_notificaition,
             });
             setmsg('');
+            // setData((prevData) => ({
+            //     ...prevData,
+            //     notifications: [...prevData.notifications, new_notificaition],
+            // }));
+            await fetchData();
             console.log('New Note Added successfully!');
         } catch (error) {
             console.error('something went wrong: ', error);
@@ -149,9 +203,15 @@ function User({setIsLoggedIn}) {
         setdonehigh([]);
         setdonemid([]);
         setdonelow([]);
+        setdoinghigh([]);
+        setdoingmid([]);
+        setdoinglow([]);
         localStorage.removeItem('donehigh');
         localStorage.removeItem('donemid');
         localStorage.removeItem('donelow');
+        localStorage.removeItem('doinghigh');
+        localStorage.removeItem('doingmid');
+        localStorage.removeItem('doinglow');
     }
 
     return (
@@ -187,6 +247,7 @@ function User({setIsLoggedIn}) {
                                         <li key={index}>
                                             {task.task}
                                             <button onClick={() => handleclick(task)} className='ml-10 shadow-md shadow-black rounded-md hover:h-7 hover:w-7'>✔</button>
+                                            <button onClick={() => handledones(task)} className='ml-4 shadow-md shadow-black rounded-md hover:h-7 hover:w-7'>⏩</button>
                                         </li>
                                     ))}
                                 </div>
@@ -203,6 +264,7 @@ function User({setIsLoggedIn}) {
                                         <li key={index}>
                                             {task.task}
                                             <button onClick={() => handleclick(task)} className='ml-10 shadow-md shadow-black rounded-md hover:h-7 hover:w-7'>✔</button>
+                                            <button onClick={() => handledones(task)} className='ml-4 shadow-md shadow-black rounded-md hover:h-7 hover:w-7'>⏩</button>
                                         </li>
                                     ))}
                                 </div>
@@ -218,6 +280,7 @@ function User({setIsLoggedIn}) {
                                         <li key={index}>
                                             {task.task}
                                             <button onClick={() => handleclick(task)} className='ml-10 shadow-md shadow-black rounded-md hover:h-7 hover:w-7'>✔</button>
+                                            <button onClick={() => handledones(task)} className='ml-4 shadow-md shadow-black rounded-md hover:h-7 hover:w-7'>⏩</button>
                                         </li>
                                     ))}
                                 </div>
@@ -240,7 +303,7 @@ function User({setIsLoggedIn}) {
                                     {doinghigh.map((task, index) => (
                                         <li key={index}>
                                             {task}
-                                            <button onClick={() => handledoingshigh(task)} className='ml-10 shadow-md shadow-black rounded-md hover:h-7 hover:w-7'>✔</button>
+                                            <button onClick={() => handledoings(task, 'high')} className='ml-10 shadow-md shadow-black rounded-md hover:h-7 hover:w-7'>✔</button>
                                         </li>
                                     ))}
                                 </div>
@@ -255,7 +318,7 @@ function User({setIsLoggedIn}) {
                                     {doingmid.map((task, index) => (
                                         <li key={index}>
                                             {task}
-                                            <button onClick={() => handledoingsmid(task)} className='ml-10 shadow-md shadow-black rounded-md hover:h-7 hover:w-7'>✔</button>
+                                            <button onClick={() => handledoings(task, 'mid')} className='ml-10 shadow-md shadow-black rounded-md hover:h-7 hover:w-7'>✔</button>
                                         </li>
                                     ))}
                                 </div>
@@ -269,7 +332,7 @@ function User({setIsLoggedIn}) {
                                     {doinglow.map((task, index) => (
                                         <li key={index}>
                                             {task}
-                                            <button onClick={() => handledoingslow(task)} className='ml-10 shadow-md shadow-black rounded-md hover:h-7 hover:w-7'>✔</button>
+                                            <button onClick={() => handledoings(task, 'low')} className='ml-10 shadow-md shadow-black rounded-md hover:h-7 hover:w-7'>✔</button>
                                         </li>
                                     ))}
                                 </div>
@@ -291,6 +354,7 @@ function User({setIsLoggedIn}) {
                                     {donehigh.map((task, index) => (
                                         <li key={index}>
                                             {task}
+                                            <button onClick={() => backtodoings(task, 'high')} className='ml-10 shadow-md shadow-black rounded-md hover:h-7 hover:w-7'>◀</button>
                                         </li>
                                     ))}
                                 </div>
@@ -305,6 +369,7 @@ function User({setIsLoggedIn}) {
                                     {donemid.map((task, index) => (
                                         <li key={index}>
                                             {task}
+                                            <button onClick={() => backtodoings(task, 'mid')} className='ml-10 shadow-md shadow-black rounded-md hover:h-7 hover:w-7'>◀</button>
                                         </li>
                                     ))}
                                 </div>
@@ -318,6 +383,7 @@ function User({setIsLoggedIn}) {
                                     {donelow.map((task, index) => (
                                         <li key={index}>
                                             {task}
+                                            <button onClick={() => backtodoings(task, 'low')} className='ml-10 shadow-md shadow-black rounded-md hover:h-7 hover:w-7'>◀</button>
                                         </li>
                                     ))}
                                 </div>
@@ -331,6 +397,7 @@ function User({setIsLoggedIn}) {
                             )}
                         </div>
                     </div>
+
                     <div className={`flex flex-1 flex-col rounded-xl bg-[url] bg-cover bg-center mb-4 mr-1`} style={{ backgroundImage: `url(${bg_url})` }}>
                         <h2 className='text-md font-semibold text-white font-sans bg-[#075e55] p-2 text-center rounded-t-lg'>Notifications</h2>
                         <div className='flex flex-col h-full w-full'>
