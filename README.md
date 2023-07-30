@@ -12,3 +12,14 @@ cd LMS
 npm install
 npm run dev
 ```
+Test Emails & Passwords
+* For Admin
+```
+Email:    admin@lms.com
+Password: admin@123
+```
+* For User
+```
+Email:    abc@gmail.com
+Password: 123456
+```
