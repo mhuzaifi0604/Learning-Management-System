@@ -69,7 +69,7 @@ Password: 123456
 * <i>you can <strong>add & delete</strong> tasks and notification as well</i><br>
 <img src='./Pics/Screenshot_11.png' alt='User Dashbord'/><br>
 <img src='./Pics/Screenshot_12.png' alt='User Dashbord'/><br>
-<img src='./Pics/Screenshot_13.png' alt='User Dashbord'/><br>\
+<img src='./Pics/Screenshot_13.png' alt='User Dashbord'/><br>
 
 * <i>Now that we have added tasks and notofications lets head back to the User Dashboard</i><br>
 <img src='./Pics/Screenshot_14.png' alt='User Dashbord'/><br>
