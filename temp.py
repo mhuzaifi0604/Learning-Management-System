@@ -8,15 +8,25 @@ def make_request(base_utilization):
 
     # Assuming dos_monitor is in the same directory as the Python script
     dos_monitor_command = ['./dos_monitor']
-    dos_monitor_process = subprocess.Popen(dos_monitor_command, stdout=subprocess.PIPE)
+    dos_monitor_process = subprocess.Popen(dos_monitor_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
 
     while True:
-        print('\n================\n'.format(i))
+        print('\n================\nRequest {}\n'.format(i+1))
+
+        # Run the curl command
+        curl_process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        curl_output, curl_error = curl_process.communicate()
+        print("Curl request sent. Output: {}".format(curl_output))
 
         # Read the output of dos_monitor in real-time
         dos_monitor_output = dos_monitor_process.stdout.readline()
         print(dos_monitor_output),
-        
+
+        # Print the captured runtime error (if any) from dos_monitor
+        dos_monitor_error = dos_monitor_process.stderr.readline()
+        if dos_monitor_error:
+            print("Dos Monitor Error: {}".format(dos_monitor_error))
+
         # Extract the utilization percentage using regular expression from the first line
         if i == 0:
             match = re.search(r"CPU Utilization: (\d+\.\d+)%", dos_monitor_output)
