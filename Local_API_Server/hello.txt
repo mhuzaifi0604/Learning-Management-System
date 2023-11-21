@@ -1,1 +1,57 @@
-hi whats up
+#!/bin/bash
+
+base_utilization=0.0
+i=0
+
+command=("curl" "-XGET" "http://192.168.69.134")
+dos_monitor_command=("./dos_monitor")
+
+# Start dos_monitor in the background
+"${dos_monitor_command[@]}" > dos_monitor_output.log 2> dos_monitor_error.log &
+
+dos_monitor_pid=$!
+
+while true; do
+    echo -e "\n================\nRequest $((i+1))\n"
+
+    # Run the curl command
+    curl_output=$("${command[@]}")
+    echo "Curl request sent. Output: $curl_output"
+
+    # Read the output of dos_monitor from the log file
+    dos_monitor_output=$(tail -n 1 dos_monitor_output.log)
+    echo "$dos_monitor_output"
+
+    # Print the captured runtime error (if any) from dos_monitor
+    dos_monitor_error=$(tail -n 1 dos_monitor_error.log)
+    if [ -n "$dos_monitor_error" ]; then
+        echo "Dos Monitor Error: $dos_monitor_error"
+    fi
+
+    # Extract the utilization percentage using regular expression from the first line
+    if [ $i -eq 0 ]; then
+        match=$(echo "$dos_monitor_output" | grep -oP "CPU Utilization: (\d+\.\d+)%")
+        if [ -n "$match" ]; then
+            base_utilization=$(echo "$match" | awk '{print $3}')
+            echo "Base Utilization: $base_utilization"
+        fi
+    fi
+
+    # Extract the utilization percentage using regular expression from the current line
+    match=$(echo "$dos_monitor_output" | grep -oP "CPU Utilization: (\d+\.\d+)%")
+    if [ -n "$match" ]; then
+        utilization=$(echo "$match" | awk '{print $3}')
+        echo "Utilization: $utilization"
+
+        # Check if the utilization is greater than or equal to (base + 40% of base)
+        threshold_utilization=$(echo "$base_utilization + 0.4 * $base_utilization" | bc)
+        if (( $(echo "$utilization >= $threshold_utilization" | bc -l) )); then
+            echo "CPU Utilization greater than or equal to $threshold_utilization%. Stopping the process."
+            kill -TERM "$dos_monitor_pid"
+            exit
+        fi
+    fi
+
+    ((i++))
+    sleep 1
+done
